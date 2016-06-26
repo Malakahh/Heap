@@ -9,17 +9,22 @@ namespace Heap
 {
     class Heap
     {
-        List<HeapNode> nodes;
+        public enum HeapProperty { MaxHeap, MinHeap }
 
-        public Heap(IEnumerable<HeapNode> nodes)
+        List<HeapNode> nodes;
+        int heapProperty;
+
+        public Heap(IEnumerable<HeapNode> nodes, HeapProperty heapProperty)
         {
             this.nodes = new List<HeapNode>(nodes);
+            this.heapProperty = (heapProperty == HeapProperty.MaxHeap) ? 1 : -1;
         }
 
         // Copy constructor
         public Heap(Heap toCopy)
         {
             this.nodes = new List<HeapNode>(toCopy.nodes);
+            this.heapProperty = toCopy.heapProperty;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -40,26 +45,24 @@ namespace Heap
             return i * 2 + 1;
         }
 
-        #region Max Heap
-
         /// <summary>
-        ///     Maintains the max-heap property.
-        ///     Assumes Left(i) and Right(i) are max heaps.
+        ///     Maintains the heap property.
+        ///     Assumes Left(i) and Right(i) maintain the heap property heaps.
         /// </summary>
-        /// <param name="i">Index into nodes. This might be smaller than its children.</param>
-        void MaxHeapify(int i)
+        /// <param name="i">Index into nodes. This node might not satisfy the heap property.</param>
+        void Heapify(int i)
         {
             int l = Left(i);
             int r = Right(i);
 
             int largest = i;
 
-            if (l < nodes.Count && nodes[l].CompareTo(nodes[largest]) > 0)
+            if (l < nodes.Count && nodes[l].CompareTo(nodes[largest]) * heapProperty > 0)
             {
                 largest = l;
             }
 
-            if (r < nodes.Count && nodes[r].CompareTo(nodes[largest]) > 0)
+            if (r < nodes.Count && nodes[r].CompareTo(nodes[largest]) * heapProperty > 0)
             {
                 largest = r;
             }
@@ -67,35 +70,35 @@ namespace Heap
             if (largest != i)
             {
                 Swap(i, largest);
-                MaxHeapify(largest);
+                Heapify(largest);
             }
         }
 
         /// <summary>
-        /// Iterates through all non-leaves of the tree, and runs MaxHeapify on each one.
+        /// Iterates through all non-leaves of the tree, and runs Heapify on each one.
         /// </summary>
-        public void BuildMaxHeap()
+        public void BuildHeap()
         {
             for (int i = (nodes.Count - 1) / 2; i >= 0; i--)
             {
-                MaxHeapify(i);
+                Heapify(i);
             }
         }
 
         /// <summary>
-        /// Increases a key's value whilst maintaining the max-heap property
+        /// Alters a key's value whilst maintaining the heap property
         /// </summary>
         /// <param name="i">Index of key to increase</param>
         /// <param name="key">new value of key</param>
-        void HeapIncreaseKey(int i, double key)
+        void HeapAlterKey(int i, double key)
         {
-            if (key < nodes[i].key)
+            if (key.CompareTo(nodes[i].key) * heapProperty < 0)
             {
-                throw new ArgumentException("new key is smaller than current key");
+                throw new ArgumentException("new key is not valid"); //This should be handled better at some point. Just call buildheap again?
             }
 
             nodes[i].key = key;
-            while (i > 0 && nodes[Parent(i)].CompareTo(nodes[i]) < 0)
+            while (i > 0 && nodes[Parent(i)].CompareTo(nodes[i]) * heapProperty < 0)
             {
                 Swap(i, Parent(i));
                 i = Parent(i);
@@ -106,32 +109,30 @@ namespace Heap
         /// Inserts a new node into the heap whilst maintaining the max-heap property
         /// </summary>
         /// <param name="newNode"></param>
-        public void MaxHeapInsert(HeapNode newNode)
+        public void HeapInsert(HeapNode newNode)
         {
             nodes.Add(newNode);
-            HeapIncreaseKey(nodes.Count - 1, newNode.key);
+            HeapAlterKey(nodes.Count - 1, newNode.key);
         }
 
         /// <summary>
-        /// Verifies the Max Heap property
+        /// Verifies the Heap property
         /// </summary>
-        /// <returns>If this is a max heap</returns>
-        public bool VerifyMaxHeapProperty()
+        /// <returns>Whether it is a max heap or a min heap</returns>
+        public bool VerifyHeapProperty(HeapProperty hp)
         {
-            bool isMaxHeap = true;
+            bool satisfyHeapProperty = true;
 
             for (int i = 0; i < nodes.Count; i++)
             {
-                if (nodes[Parent(i)].CompareTo(nodes[i]) < 0)
+                if (nodes[Parent(i)].CompareTo(nodes[i]) * ((hp == HeapProperty.MaxHeap) ? 1 : -1) < 0)
                 {
-                    isMaxHeap = false;
+                    satisfyHeapProperty = false;
                 }
             }
 
-            return isMaxHeap;
+            return satisfyHeapProperty;
         }
-
-        #endregion
 
         /// <summary>
         /// Swaps two nodes' position.
@@ -156,6 +157,7 @@ namespace Heap
 
             return s;
         }
+
     }
 
     class HeapNode : IComparable

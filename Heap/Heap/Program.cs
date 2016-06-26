@@ -23,16 +23,16 @@ namespace Heap
                 new HeapNode(8),
                 new HeapNode(7),
             };
-            Heap h = new Heap(list);
+            Heap h = new Heap(list, Heap.HeapProperty.MinHeap);
 
             Console.WriteLine("Pre:\n" + h.ToString());
-            Console.WriteLine("IsMaxHeap: " + h.VerifyMaxHeapProperty());
-            h.BuildMaxHeap();
-            Console.WriteLine("IsMaxHeap: " + h.VerifyMaxHeapProperty());
+            Console.WriteLine("IsMinHeap: " + h.VerifyHeapProperty(Heap.HeapProperty.MinHeap));
+            h.BuildHeap();
+            Console.WriteLine("IsMinHeap: " + h.VerifyHeapProperty(Heap.HeapProperty.MinHeap));
             Console.WriteLine("Post:\n" + h.ToString());
-            h.MaxHeapInsert(new HeapNode(6));
+            h.HeapInsert(new HeapNode(6));
             Console.WriteLine("Insert:\n" + h.ToString());
-            Console.WriteLine("IsMaxHeap: " + h.VerifyMaxHeapProperty());
+            Console.WriteLine("IsMinHeap: " + h.VerifyHeapProperty(Heap.HeapProperty.MinHeap));
 
 
             Console.ReadKey();

@@ -160,35 +160,8 @@ namespace Heap
 
     }
 
-    class HeapNode : IComparable
+    interface HeapNode : IComparable
     {
-        public double key;
-
-        public HeapNode(double k)
-        {
-            key = k;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns>
-        ///         If less than 0 the current object preceeds the given object.
-        ///         If equal to 0 the current object is in the same position as the given object.
-        ///         If greater than 0 the current object follows the given object.
-        /// </returns>
-        public int CompareTo(object obj)
-        {
-            HeapNode other = obj as HeapNode;
-            if (other != null)
-            {
-                return key.CompareTo(other.key);
-            }
-            else
-            {
-                throw new ArgumentException("Object is not a HeapNode");
-            }
-        }
+        double key { get; set; }
     }
 }

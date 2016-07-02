@@ -14,6 +14,11 @@ namespace Heap
         List<HeapNode> nodes;
         int heapProperty;
 
+        public int Count
+        {
+            get { return nodes.Count; }
+        }
+
         public Heap(IEnumerable<HeapNode> nodes, HeapProperty heapProperty)
         {
             this.nodes = new List<HeapNode>(nodes);
@@ -115,6 +120,22 @@ namespace Heap
             HeapAlterKey(nodes.Count - 1, newNode.key);
         }
 
+        public HeapNode HeapExtractRoot()
+        {
+            if (nodes.Count < 1)
+            {
+                throw new IndexOutOfRangeException("No nodes in heap");
+            }
+
+            HeapNode root = nodes[0];
+            nodes[0] = nodes[nodes.Count - 1];
+            nodes.RemoveAt(nodes.Count - 1);
+
+            Heapify(0);
+
+            return root;
+        }
+
         /// <summary>
         /// Verifies the Heap property
         /// </summary>
@@ -155,7 +176,7 @@ namespace Heap
                 s += nodes[i].key + ", ";
             }
 
-            return s;
+            return s.Remove(s.Length - 2);
         }
 
     }

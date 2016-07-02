@@ -33,7 +33,9 @@ namespace Heap
             h.HeapInsert(new Node(6));
             Console.WriteLine("Insert:\n" + h.ToString());
             Console.WriteLine("IsMinHeap: " + h.VerifyHeapProperty(Heap.HeapProperty.MinHeap));
-
+            Console.WriteLine("Min: " + h.HeapExtractRoot().key);
+            Console.WriteLine("Extract:\n" + h.ToString());
+            Console.WriteLine("IsMinHeap: " + h.VerifyHeapProperty(Heap.HeapProperty.MinHeap));
 
             Console.ReadKey();
 

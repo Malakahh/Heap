@@ -111,7 +111,7 @@ namespace Heap
         }
 
         /// <summary>
-        /// Inserts a new node into the heap whilst maintaining the max-heap property
+        /// Inserts a new node into the heap whilst maintaining the heap property
         /// </summary>
         /// <param name="newNode"></param>
         public void HeapInsert(HeapNode newNode)
@@ -120,6 +120,11 @@ namespace Heap
             HeapAlterKey(nodes.Count - 1, newNode.key);
         }
 
+
+        /// <summary>
+        /// Extracts the root node from the Heap. Maintains the heap property
+        /// </summary>
+        /// <returns>root node</returns>
         public HeapNode HeapExtractRoot()
         {
             if (nodes.Count < 1)
@@ -134,6 +139,16 @@ namespace Heap
             Heapify(0);
 
             return root;
+        }
+
+        /// <summary>
+        /// Determines whether an element is in the heap
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public bool Contains(HeapNode node)
+        {
+            return nodes.Contains(node);
         }
 
         /// <summary>

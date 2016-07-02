@@ -36,6 +36,8 @@ namespace Heap
             Console.WriteLine("Min: " + h.HeapExtractRoot().key);
             Console.WriteLine("Extract:\n" + h.ToString());
             Console.WriteLine("IsMinHeap: " + h.VerifyHeapProperty(Heap.HeapProperty.MinHeap));
+            Console.WriteLine("Contains-Y: " + h.Contains(list[0]));
+            Console.WriteLine("Contains-N: " + h.Contains(list[1]));
 
             Console.ReadKey();
 
